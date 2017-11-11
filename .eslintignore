@@ -1,2 +1,3 @@
 build_local/**/*.js
+build_production/**/*.js
 source/js/**/*.js

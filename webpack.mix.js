@@ -13,20 +13,26 @@ var tailwind = require('tailwindcss')
  */
 
 mix
-  .js('source/_assets/js/index.js', 'source/js')
-  .postCss('source/_assets/css/style.css', 'source/css', [
-    tailwind('tailwind.js')
-  ])
-  .options({
-    purifyCss: true
-  })
+  .js(
+    'source/_assets/js/index.js',
+    mix.inProduction() ? 'build_production/js' : 'build_local/js'
+  )
+  .postCss(
+    'source/_assets/css/style.css',
+    mix.inProduction() ? 'build_production/css' : 'build_local/css',
+    [tailwind('tailwind.js')]
+  )
   .browserSync({
     proxy: false,
     server: 'build_local',
     files: [
       'build_local/**/*',
       {
-        match: ['source/_layouts/**/*', 'source/_assets/**/*', 'source/**/*.blade.php'],
+        match: [
+          'source/_layouts/**/*',
+          'source/_assets/**/*',
+          'source/**/*.blade.*'
+        ],
         fn: function (event, file) {
           if (event === 'change') {
             const exec = require('child_process').exec
@@ -43,6 +49,15 @@ mix
       }
     ]
   })
+
+if (mix.inProduction()) {
+  mix.options({
+    purifyCss: {
+      paths: ['build_local/**/*.html'],
+      verbose: true
+    }
+  })
+}
 
 // Full API
 // mix.js(src, output);

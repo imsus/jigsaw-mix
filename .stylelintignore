@@ -1,2 +1,3 @@
 build_local/**/*.css
+build_production/**/*.css
 source/css/**/*.css
